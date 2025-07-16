@@ -1,0 +1,88 @@
+Service:
+  RegionId: cn-hangzhou
+  DeployType: ros
+  OperationMetadata:
+    StatusOperationConfigs:
+    - TemplateName: ECS单机版
+      SupportOperations:
+      - Start
+      - Stop
+      - Restart
+    SupportBackup: true
+    ModifyParametersConfig:
+    - TemplateName: ECS单机版
+      Operation:
+      - Name: 变更ECS实例规格
+        Description: 变更ECS实例规格
+        Type: Custom
+        Parameters:
+        - EcsInstanceType
+      - Name: 变更ECS实例密码
+        Description: 变更ECS实例密码
+        Type: Custom
+        Parameters:
+        - InstancePassword
+  UpgradeMetadata:
+    Description: 升级
+    SupportUpgradeFromVersions: []
+    SupportRollback: true
+    UpgradeComponents:
+    - Configuration
+    - Resource
+  DeployMetadata:
+    SupplierDeployMetadata:
+      SupplierTemplateConfigs:
+      - Name: ECS单机版
+        Url: 'ros_templates/template.yaml'
+        ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+        AllowedRegions:
+        - ap-southeast-1
+      ArtifactRelation:
+        ecs_image_quickstart-langfuse:
+          ArtifactId: ${Artifact.EcsImage.ArtifactId}
+          ArtifactVersion: draft
+    TemplateConfigs:
+    - Name: ECS单机版
+      Url: 'ros_templates/template.yaml'
+      ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+      AllowedRegions:
+      - ap-southeast-1
+  ServiceType: private
+  ServiceInfo:
+    # 英文版可以再配置Locale为en-US的服务信息
+  - Locale: zh-CN
+    Name: Langfuse社区版
+    ShortDescription: Langfuse 是一个开源的 LLM 工程平台，可帮助团队协作调试、分析和迭代其 LLM 应用程序。所有平台功能均原生集成，以加速开发工作流程。Langfuse
+      开放、自托管且可扩展。
+    Image: 
+      https://service-info-public.oss-cn-hangzhou.aliyuncs.com/1853370294850618/service-image/662965db-e4fd-4005-afda-c2d08263ab90.jpg
+    Softwares: []
+Artifact:
+  EcsImage:
+    ArtifactType: EcsImage
+    ArtifactName: ecs_image_quickstart-langfuse
+    Description: quickstart-langfuse EcsImage
+    SupportRegionIds:
+    - ap-southeast-1
+    ArtifactBuildProperty:
+      CodeRepo:
+        Platform: github
+        Owner: Alicloud-ComputeNest
+        RepoName: aliyun-computenest/quickstart-langfuse
+        Branch: main
+      RegionId: ap-southeast-1
+      CommandType: RunShellScript
+      CommandContent: |-
+        mkdir -p /root/application
+        mkdir -p "/root/application/langfuse"
+        if [ -e "/root/code/langfuse/.env.dev.example" ]; then cp -r "/root/code/langfuse/.env.dev.example" "/root/application/langfuse/"; fi
+        if [ -e "/root/code/langfuse/docker-compose.yml" ]; then cp -r "/root/code/langfuse/docker-compose.yml" "/root/application/langfuse/"; fi
+        if [ -e "/root/code/langfuse/langfuse_clickhouse_logs" ]; then cp -r "/root/code/langfuse/langfuse_clickhouse_logs" "/root/application/langfuse/"; fi
+        if [ -e "/root/code/langfuse/langfuse_minio_data" ]; then cp -r "/root/code/langfuse/langfuse_minio_data" "/root/application/langfuse/"; fi
+        if [ -e "/root/code/langfuse/langfuse_postgres_data" ]; then cp -r "/root/code/langfuse/langfuse_postgres_data" "/root/application/langfuse/"; fi
+        if [ -e "/root/code/langfuse/langfuse_clickhouse_data" ]; then cp -r "/root/code/langfuse/langfuse_clickhouse_data" "/root/application/langfuse/"; fi
+        cd /root/application
+        cp langfuse/.env.dev.example langfuse/.env
+        sed -i 's/pull_policy: always/pull_policy: if_not_present/g' langfuse/docker-compose.yml
+        docker compose -f langfuse/docker-compose.yml build 
+        docker compose -f langfuse/docker-compose.yml pull 2>&1 | stdbuf -oL grep -viE 'Downloading|sha256|extracting|KiB|Downloaded' || true;

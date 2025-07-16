@@ -1,0 +1,12 @@
+RuntimeType: Container
+ServiceType: private
+ArtifactSourceType: DockerCompose
+ServiceBuildRegion: ap-southeast-1
+RepoName: aliyun-computenest/quickstart-langfuse
+DockerComposeEnvPath: langfuse/.env.dev.example
+RegionId: cn-hangzhou
+CustomParameters: ''
+DockerComposeYamlPath: langfuse/docker-compose.yml
+Owner: Alicloud-ComputeNest
+Branch: main
+Platform: github
