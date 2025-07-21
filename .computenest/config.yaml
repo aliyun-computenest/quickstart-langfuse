@@ -75,7 +75,7 @@ Artifact:
       CommandContent: |-
         mkdir -p /root/application
         mkdir -p "/root/application/langfuse"
-        if [ -e "/root/code/langfuse/" ]; then cp -r "/root/code/langfuse/*" "/root/application/langfuse/"; fi
+        if [ -e "/root/code/langfuse/" ]; then cp -r /root/code/langfuse/* /root/application/langfuse/; fi
         cd /root/application
         cp langfuse/.env.dev.example langfuse/.env
         sed -i 's/pull_policy: always/pull_policy: if_not_present/g' langfuse/docker-compose.yml
