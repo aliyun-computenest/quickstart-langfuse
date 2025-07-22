@@ -486,20 +486,7 @@ Resources:
               Ref: ALIYUN::Region
             CurTime:
               Ref: CurTime
-Outputs: 
-  langfuse-worker_address:
-    Description:
-      en: langfuse-worker address.
-      zh-cn: langfuse-worker 访问页面。
-    Value:
-      Fn::Sub:
-        - http://${ServerAddress}:3030
-        - ServerAddress:
-            Fn::Select:
-              - 0
-              - Fn::GetAtt:
-                  - InstanceGroup
-                  - PublicIps
+Outputs:
   langfuse-web_address:
     Description:
       en: langfuse-web address.
@@ -507,58 +494,6 @@ Outputs:
     Value:
       Fn::Sub:
         - http://${ServerAddress}:3000
-        - ServerAddress:
-            Fn::Select:
-              - 0
-              - Fn::GetAtt:
-                  - InstanceGroup
-                  - PublicIps
-  clickhouse_address:
-    Description:
-      en: clickhouse address.
-      zh-cn: clickhouse 访问页面。
-    Value:
-      Fn::Sub:
-        - http://${ServerAddress}:9000,http://${ServerAddress}:8123
-        - ServerAddress:
-            Fn::Select:
-              - 0
-              - Fn::GetAtt:
-                  - InstanceGroup
-                  - PublicIps
-  minio_address:
-    Description:
-      en: minio address.
-      zh-cn: minio 访问页面。
-    Value:
-      Fn::Sub:
-        - http://${ServerAddress}:9090,http://${ServerAddress}:9091
-        - ServerAddress:
-            Fn::Select:
-              - 0
-              - Fn::GetAtt:
-                  - InstanceGroup
-                  - PublicIps
-  redis_address:
-    Description:
-      en: redis address.
-      zh-cn: redis 访问页面。
-    Value:
-      Fn::Sub:
-        - http://${ServerAddress}:6379
-        - ServerAddress:
-            Fn::Select:
-              - 0
-              - Fn::GetAtt:
-                  - InstanceGroup
-                  - PublicIps
-  postgres_address:
-    Description:
-      en: postgres address.
-      zh-cn: postgres 访问页面。
-    Value:
-      Fn::Sub:
-        - http://${ServerAddress}:5432
         - ServerAddress:
             Fn::Select:
               - 0
